@@ -2,11 +2,11 @@ const express = require("express");
 const app = express();
 const bodyParser = require("body-parser");
 const Blockchain = require("./blockchain");
-const { v4: uuidv4 } = require('uuid');
+const { v4: uuidv4 } = require("uuid");
 
-const nodeAddress = uuidv4().split('-').join('');
-
+const nodeAddress = uuidv4().split("-").join("");
 const bitcoin = new Blockchain();
+const PORT = process.env.PORT || 3000
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
@@ -14,36 +14,39 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.get("/blockchain", (req, res) => {
   res.status(200).send(bitcoin);
 });
-// refactor
+
 app.post("/transaction", (req, res) => {
-  const blockIndex = bitcoin.createNewTransaction(
-    req.body.amount,
-    req.body.sender,
-    req.body.recipient
-  );
-  res.status(201).json({ note: `Transaction will be added in block ${blockIndex}.` });
+  const { amount, sender, recipient } = req.body;
+  const blockIndex = bitcoin.createNewTransaction(amount, sender, recipient);
+  res
+    .status(201)
+    .json({ note: `Transaction will be added in block ${blockIndex}.` });
 });
 
 app.get("/mine", (req, res) => {
-  const lastBlock = bitcoin.getLastBlock();
-  const previousBlockHash = lastBlock['hash'];
+  const { hash, index } = bitcoin.getLastBlock();
+  const previousBlockHash = hash;
   const currentBlockData = {
     transactions: bitcoin.pendingTransactions,
-    index: lastBlock['index'] + 1
-  }
+    index: index + 1,
+  };
   const nonce = bitcoin.proofOfWork(previousBlockHash, currentBlockData);
-  const blockHash = bitcoin.hashBlock(previousBlockHash, currentBlockData, nonce);
+  const blockHash = bitcoin.hashBlock(
+    previousBlockHash,
+    currentBlockData,
+    nonce
+  );
 
-  bitcoin.createNewTransaction(12.5, '00', nodeAddress)
+  bitcoin.createNewTransaction(12.5, "00", nodeAddress);
 
   const newBlock = bitcoin.createNewBlock(nonce, previousBlockHash, blockHash);
 
   res.status(200).json({
     note: "New block mined successfully",
-    block: newBlock
-  })
+    block: newBlock,
+  });
 });
 
-app.listen(3000, () => {
-  console.log("server is running.....3000");
+app.listen(PORT, () => {
+  console.log(`server is running..... port# ${PORT}`);
 });
