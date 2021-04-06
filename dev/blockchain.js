@@ -25,9 +25,9 @@ Blockchain.prototype.createNewBlock = function (
     index: this.chain.length + 1,
     timestamp: Date.now(),
     transactions: this.pendingTransactions,
-    nonce: nonce,
-    hash: hash,
-    previousBlockHash: previousBlockHash,
+    nonce,
+    hash,
+    previousBlockHash
   };
 
   this.pendingTransactions = [];
@@ -46,9 +46,9 @@ Blockchain.prototype.createNewTransaction = function (
   recipient
 ) {
   const newTransaction = {
-    amount: amount,
-    sender: sender,
-    recipient: recipient,
+    amount,
+    sender,
+    recipient,
   };
 
   this.pendingTransactions.push(newTransaction);
