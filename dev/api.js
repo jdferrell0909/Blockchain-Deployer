@@ -3,10 +3,12 @@ const app = express();
 const bodyParser = require("body-parser");
 const Blockchain = require("./blockchain");
 const { v4: uuidv4 } = require("uuid");
+const dotenv = require('dotenv');
 
+dotenv.config();
 const nodeAddress = uuidv4().split("-").join("");
 const bitcoin = new Blockchain();
-const PORT = process.env.PORT || 3000
+const PORT = process.env.PORT || 3000;
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
