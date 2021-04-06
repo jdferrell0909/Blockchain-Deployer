@@ -12,7 +12,7 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 
 app.get("/blockchain", (req, res) => {
-  res.send(bitcoin);
+  res.status(200).send(bitcoin);
 });
 // refactor
 app.post("/transaction", (req, res) => {
@@ -21,7 +21,7 @@ app.post("/transaction", (req, res) => {
     req.body.sender,
     req.body.recipient
   );
-  res.json({ note: `Transaction will be added in block ${blockIndex}.` });
+  res.status(201).json({ note: `Transaction will be added in block ${blockIndex}.` });
 });
 
 app.get("/mine", (req, res) => {
@@ -38,7 +38,7 @@ app.get("/mine", (req, res) => {
 
   const newBlock = bitcoin.createNewBlock(nonce, previousBlockHash, blockHash);
 
-  res.json({
+  res.status(200).json({
     note: "New block mined successfully",
     block: newBlock
   })
