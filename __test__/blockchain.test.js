@@ -73,20 +73,32 @@ describe("createNewTransaction method", () => {
   const recipient = "ZYX987";
   const newTrans = newChain.createNewTransaction(amount, sender, recipient);
 
-  it('newTrans should return the number 2, index of next block', () => {
-    expect(newTrans).toEqual(2);
+  it('newTrans should return an object', () => {
+    expect(typeof newTrans).toBe('object');
   })
+
+  it('pendingTransactions at index 0 should have properties amount, sender and recipient', () => {
+    expect(newTrans).toHaveProperty('amount');
+    expect(newTrans).toHaveProperty('sender');
+    expect(newTrans).toHaveProperty('recipient');
+  })
+});
+
+describe('addTransactionToPendingTransactions', () => {
+  const newChain = new Blockchain();
+  const amount = 100;
+  const sender = "ABC123";
+  const recipient = "ZYX987";
+  const newTrans = newChain.addTransactionToPendingTransactions({ amount, sender, recipient });
 
   it('newChain\'s pendingTransaction property should have length 1', () => {
     expect(newChain.pendingTransactions).toHaveLength(1);
   })
 
-  it('pendingTransactions at index 0 should have properties amount, sender and recipient', () => {
-    expect(newChain.pendingTransactions[0]).toHaveProperty('amount');
-    expect(newChain.pendingTransactions[0]).toHaveProperty('sender');
-    expect(newChain.pendingTransactions[0]).toHaveProperty('recipient');
+  it('should return index 2', () => {
+    expect(newTrans).toEqual(2);
   })
-});
+})
 
 describe("hashBlock method", () => {
   const newChain = new Blockchain();
