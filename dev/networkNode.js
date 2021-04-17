@@ -114,7 +114,7 @@ app.post("/receive-new-block", (req, res) => {
     bitcoin.pendingTransactions = [];
     res.json({ note: `New block received and accepted.`, newBlock });
   } else {
-    res.json({ note: 'New block rejected', newBlock })
+    res.json({ note: 'New block rejected.', newBlock })
   }
 });
 
